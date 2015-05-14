@@ -1,0 +1,112 @@
+/**
+ * Created by Jaycon Systems on 06/01/15.
+ * Copyright @ 2014 Jaycon Systems. All rights reserved.
+ */
+
+package com.hiroapp.main;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.hiroapp.font.OpenSansLight;
+
+public class MapActivity extends Activity {
+
+	private GoogleMap googleMap;
+	private ImageView imgback;
+
+	private double latitude;
+	private double longitude;
+
+	private String title;
+
+	private OpenSansLight txtTitle;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+		setContentView(R.layout.map);
+
+		txtTitle = (OpenSansLight) findViewById(R.id.map_title);
+		
+		latitude = getIntent().getDoubleExtra("latitude", 0);
+		longitude = getIntent().getDoubleExtra("longitude", 0);
+		title = getIntent().getStringExtra("title");
+
+		txtTitle.setText(title);
+		
+		imgback = (ImageView) findViewById(R.id.imageView1);
+		imgback.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+
+		initilizeMap();
+
+	}
+
+	/**
+	 * function to load map. If map is not created it will create it for you
+	 * 
+	 * @param storeModelList2
+	 * */
+	private void initilizeMap() {
+		if (googleMap == null) {
+			googleMap = ((MapFragment) getFragmentManager().findFragmentById(
+					R.id.map)).getMap();
+			// googleMap.setMyLocationEnabled(true);
+			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+			googleMap.getUiSettings().setCompassEnabled(false);
+			googleMap.getUiSettings().setZoomControlsEnabled(false);
+
+			if (latitude != 0 && longitude != 0) {
+				// create marker
+				MarkerOptions marker = new MarkerOptions().position(
+						new LatLng(latitude, longitude)).title("You were here");
+
+				// adding marker
+				googleMap.addMarker(marker);
+
+				zoomCameraPosition(latitude, longitude);
+			}
+
+		}// check if map is created successfully or not
+		if (googleMap == null) {
+			Toast.makeText(getApplicationContext(),
+					"Sorry! unable to create maps", Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	/**
+	 * It will zoom the Camera Position on the Map.
+	 * @param latitude
+	 * @param longitude
+	 */
+	public void zoomCameraPosition(double latitude, double longitude) {
+
+		CameraPosition cameraPosition = new CameraPosition.Builder()
+				.target(new LatLng(latitude, longitude)).zoom(11).build();
+
+		googleMap.animateCamera(CameraUpdateFactory
+				.newCameraPosition(cameraPosition));
+	}
+
+}

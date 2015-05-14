@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D0D0D0" >
+
+    <RelativeLayout
+        android:id="@+id/mao_reltop"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="#2BA0E3"
+        android:visibility="visible" >
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/map_title"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical|center"
+            android:text=""
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:padding="3dp"
+            android:src="@drawable/backarrow_n" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mao_reltop"
+        android:layout_margin="10dp"
+        android:clipChildren="true" >
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/mapround"
+            android:orientation="vertical" >
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

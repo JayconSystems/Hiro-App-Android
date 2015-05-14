@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D0D0D0" >
+
+    <RelativeLayout
+        android:id="@+id/Settings_reltop"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentTop="true"
+        android:background="#2BA0E3"
+        android:visibility="visible" >
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/Settings_title"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical|center"
+            android:text="Settings"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:padding="3dp"
+            android:src="@drawable/backarrow_n" />
+
+        <ImageView
+            android:id="@+id/Settings_img_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"
+            android:src="@drawable/infobutton_n" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/Settings_relbottom"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#D16926"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/Settings_txt_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Save"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/Settings_relbottom"
+        android:layout_below="@+id/Settings_reltop"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Hiro beep volume"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/settings_sw_beepvolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView10"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/sw_high" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:text="Low battery notification"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/settings_sw_battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/sw_disable" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="If Hiro disconnects"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/settings_chk_pushnotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:background="@drawable/checkbox_selector"
+                    android:button="@null"
+                    android:checked="false" />
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/settings_chk_pushnotification"
+                    android:text="Push/Vibrate notification"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/settings_chk_phonesound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:background="@drawable/checkbox_selector"
+                    android:button="@null"
+                    android:checked="false" />
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/settings_chk_phonesound"
+                    android:text="Phone sound alert"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/Settings_txt_defaultring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="120dp"
+                    android:text="Default ringtone >"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <CheckBox
+                    android:id="@+id/settings_chk_heroalert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dp"
+                    android:background="@drawable/checkbox_selector"
+                    android:button="@null"
+                    android:checked="false" />
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/settings_chk_heroalert"
+                    android:text="Hiro beep alert"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/settings_sw_heroalert"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/sw_mild" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="Find phone thru Hiro feature"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/Settings_txt_defaultring_for_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="120dp"
+                    android:text="Default ringtone >"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+           <!--  <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:text="Wifi Mode"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/settings_sw_wifimode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/sw_enable" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/settings_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="40dp"
+                    android:singleLine="true"
+                    android:text="WifiName:"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/settings_txt_wifiName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:singleLine="true"
+                    android:layout_toRightOf="@+id/settings_txt"
+                    android:text="Himen Home"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal" >
+
+                <com.hiroapp.font.OpenSansLight
+                    android:id="@+id/settings_txt_Save"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/oval"
+                    android:gravity="center"
+                    android:text="Save"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+ -->
+            <com.hiroapp.font.OpenSansLight
+                android:id="@+id/delete"
+                android:layout_width="120dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/oval"
+                android:gravity="center"
+                android:text="Delete"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

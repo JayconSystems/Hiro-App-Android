@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/HeroApp_Android/!svn/ver/39/trunk/HeroApp/src/com/hiroapp/adapter
+END
+CropOptionAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/HeroApp_Android/!svn/ver/27/trunk/HeroApp/src/com/hiroapp/adapter/CropOptionAdapter.java
+END
+ConnectedDeviceListAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/adapter/ConnectedDeviceListAdapter.java
+END
+LeDeviceListAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/adapter/LeDeviceListAdapter.java
+END

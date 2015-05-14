@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/HeroApp_Android/!svn/ver/15/trunk/HeroApp/res/raw
+END
+error.mp3
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/HeroApp_Android/!svn/ver/15/trunk/HeroApp/res/raw/error.mp3
+END
+connect.mp3
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/HeroApp_Android/!svn/ver/15/trunk/HeroApp/res/raw/connect.mp3
+END
+disconnect.mp3
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/HeroApp_Android/!svn/ver/15/trunk/HeroApp/res/raw/disconnect.mp3
+END

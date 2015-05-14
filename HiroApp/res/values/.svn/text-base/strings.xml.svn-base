@@ -1,0 +1,22 @@
+<resources>
+
+    <string name="app_name">Hiro</string>
+    <!-- Database Strings -->
+    <string name="DB_NAME">HiroAppDB.sqlite</string>
+    <string name="DB_PATH">/data/data/com.hiroapp.main/databases/</string>
+
+    <!-- Splash Screen Display -->
+    <string name="splashContentDescription">Show Splash Screen</string>
+    <string name="stradd_device">Add device</string>
+
+    <!-- Scan Activity -->
+    <string name="strlogicalNamemsg">Give your Hiro a name.</string>
+    <string name="strlogicalName">Name:</string>
+    <string name="strok">OK</string>
+    <!-- MainActivity Screen -->
+    <string name="scanner">Scan Devices</string>
+    <string name="strstop">Stop</string>
+    
+     <string name="FolderPath">HiroApp</string>
+ <string name="Crop_error">Error while image capturing!</string>
+</resources>

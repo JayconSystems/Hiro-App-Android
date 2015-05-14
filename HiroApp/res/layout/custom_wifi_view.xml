@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15sp"
+    android:orientation="vertical"
+    android:paddingTop="20sp" >
+
+    <ImageView
+        android:id="@+id/wifisafezones_img_addwifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:padding="5dp"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/removewifi" />
+
+    <com.hiroapp.font.OpenSansLightItalic
+        android:id="@+id/wifisafezones_txt_currentwifi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/wifisafezones_img_addwifi"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textSize="20sp" />
+
+</RelativeLayout>

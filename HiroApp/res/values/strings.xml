@@ -1,0 +1,29 @@
+<resources>
+
+    <string name="app_name">Hiro</string>
+    <!-- Database Strings -->
+    <string name="DB_NAME">HiroAppDB.sqlite</string>
+    <string name="DB_PATH">/data/data/com.hiroapp.main/databases/</string>
+
+    <!-- Splash Screen Display -->
+    <string name="splashContentDescription">Show Splash Screen</string>
+    <string name="stradd_device">Add device</string>
+
+    <!-- Scan Activity -->
+    <string name="strlogicalNamemsg">Give your Hiro a name.</string>
+    <string name="strlogicalName">Name:</string>
+    <string name="strok">OK</string>
+    <!-- MainActivity Screen -->
+    <string name="scanner">Scan Devices</string>
+    <string name="strstop">Stop</string>
+    
+     <string name="FolderPath">HiroApp</string>
+ <string name="Crop_error">Error while image capturing!</string>
+ 
+  <!-- WifiSafe Zone screen -->
+  <string name="strwifiheader">Wi-Fi Safe Zone Feature</string>
+  <string name="strwifidetails">Select the Wi-Fi Networks where you do not need disconnect notications.\nThis feature prevent your hiro and phone from buzzing, for example, you leave your phone in room that is over 200ft away from another room. \nNote that you will still be able to buzz your Hiro at any time as long as you are in the 200 feet range.</string>
+  
+  <!-- WifiSafe Zone -->
+  <string name="strcurrentwifi">Current Connected Wi-Fi</string>
+</resources>

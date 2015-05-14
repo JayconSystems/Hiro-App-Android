@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D0D0D0" >
+
+    <RelativeLayout
+        android:id="@+id/rel_header1"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="#2BA0E3" >
+
+        <ImageView
+            android:id="@+id/imgback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:src="@drawable/backarrow_n" />
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/wifisafezoineinformation_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="Wi-Fi Safe Zones"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/wifisafezoneinfoscreen_lnr_info"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/rel_header1"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <com.hiroapp.font.OpenSansBold
+            android:id="@+id/wifisafezoneinfoscreen_txt_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20sp"
+            android:paddingTop="20sp"
+            android:text="@string/strwifiheader"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/wifisafezoneinfoscreen_txt_infodetails"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="5dp"
+            android:text="@string/strwifidetails"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+</RelativeLayout>

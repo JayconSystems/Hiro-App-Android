@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D0D0D0" >
+
+    <RelativeLayout
+        android:id="@+id/titlerelative"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#2BA0E3" >
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/txttitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Select device"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/titlelinear"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="1dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toEndOf="@+id/txttitle"
+            android:orientation="horizontal" >
+
+            <ProgressBar
+                android:id="@+id/progressbar"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="5dp" >
+            </ProgressBar>
+
+            <com.hiroapp.font.OpenSansRegular
+                android:id="@+id/txtscan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/strstop"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/lstscanning"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@android:color/white"
+        android:layout_margin="10dp"
+        android:dividerHeight="1dp"
+        android:divider="#2BA0E3"
+        android:layout_below="@+id/titlerelative" >
+    </ListView>
+
+</RelativeLayout>

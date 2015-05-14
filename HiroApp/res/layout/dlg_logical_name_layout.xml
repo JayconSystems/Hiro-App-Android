@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#D3D3D3"
+    android:orientation="vertical" >
+
+    <com.hiroapp.font.OpenSansLight
+        android:id="@+id/blah1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:paddingLeft="5dp"
+        android:text="@string/strlogicalNamemsg"
+        android:textColor="@android:color/black" />
+
+    <com.hiroapp.font.OpenSansLight
+        android:id="@+id/blah2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:paddingLeft="5dp"
+        android:text="@string/strlogicalName"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/dlg_logical_name_edt_lname"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dip"
+        android:clickable="false"
+        android:singleLine="true"
+        android:text=""
+        android:textSize="14sp"
+        android:textStyle="normal" />
+
+    <Button
+        android:id="@+id/dlg_logical_name_btn_OK"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dip"
+        android:gravity="center"
+        android:text="@string/strok" />
+
+</LinearLayout>

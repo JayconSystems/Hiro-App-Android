@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical" >
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:weightSum="2" >
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="2" >
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtname"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="start"
+                android:text="@string/stradd_device"
+                android:textSize="21sp" />
+
+            <EditText
+                android:id="@+id/edtname"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="top|left"
+                android:inputType="text"
+                android:maxLength="22"
+                android:padding="5dp"
+                android:scrollbars="vertical"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/txtmsg"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="25dp"
+                android:gravity="start"
+                android:textSize="21sp" />
+
+            <EditText
+                android:id="@+id/edtmessage"
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:gravity="top|left"
+                android:inputType="textMultiLine"
+                android:maxLength="170"
+                android:maxLines="10"
+                android:padding="5dp"
+                android:scrollbars="vertical" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:weightSum="2" >
+
+                <TextView
+                    android:id="@+id/txtpowersetting"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="0.9"
+                    android:gravity="center_vertical"
+                    android:textSize="21sp" />
+
+                <Spinner
+                    android:id="@+id/spntransmissionpower"
+                    style="@android:style/Widget.Holo.Light.DropDownItem.Spinner"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1.1"
+                    android:gravity="center"
+                    android:inputType="text"
+                    android:padding="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/btnsenddata"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

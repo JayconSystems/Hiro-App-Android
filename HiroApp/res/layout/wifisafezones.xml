@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D0D0D0" >
+
+    <RelativeLayout
+        android:id="@+id/rel_header1"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="#2BA0E3" >
+
+        <ImageView
+            android:id="@+id/imgback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:padding="5dp"
+            android:src="@drawable/backarrow_n" />
+
+        <ImageView
+            android:id="@+id/wifisafezones_imgwifiinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:padding="5dp"
+            android:src="@drawable/infobutton_n" />
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/wifisafezones_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:text="Wi-Fi Safe Zones"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/wifisafezones_lnr_wifi"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/rel_header1"
+        android:layout_margin="10dp"
+        android:background="@android:color/white"
+        android:orientation="vertical" >
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/wifisafezones_txt_header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25sp"
+            android:paddingTop="20sp"
+            android:text="@string/strcurrentwifi"
+            android:textSize="22sp" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15sp"
+            android:paddingTop="20sp" >
+
+            <ImageView
+                android:id="@+id/wifisafezones_img_addwifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:padding="5dp"
+                android:src="@drawable/addwifi" />
+
+            <com.hiroapp.font.OpenSansLightItalic
+                android:id="@+id/wifisafezones_txt_currentwifi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/wifisafezones_img_addwifi"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="Paules&apos;s Internet"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/wifisafezones_img_wifistregnth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@id/wifisafezones_txt_currentwifi"
+                android:padding="5dp"
+                android:src="@drawable/signal_n3" />
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/wifisafezones_img_greyline"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_margin="15dp"
+            android:background="@android:color/darker_gray" />
+
+        <com.hiroapp.font.OpenSansLight
+            android:id="@+id/wifisafezones_selected_wifi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:paddingLeft="25sp"
+            android:paddingTop="20sp"
+            android:text="Selected Safe Zones"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <ListView
+            android:id="@+id/wifisafezones_lst_listwifi"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,132 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.hiroapp.main"
+    android:versionCode="3"
+    android:versionName="1.2" >
+
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="19" />
+
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_ADMIN"
+        android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <permission
+        android:name="com.hiroapp.main.googlemapsv2.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.hiroapp.main.googlemapsv2.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+
+    <!-- Required to show current location -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <!-- Required OpenGL ES 2.0. for Maps V2 -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <application
+        android:name="com.hiroapp.main.HeroApp_App"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <service android:name="com.hiroapp.scanservice.ScanBGService" />
+        <service android:name="com.hiroapp.common.GPSTracker" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Goolge Maps API Key -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCiP27wWOpZPKTSxErejOOtIN-XvGb_hw8" />
+
+        <!-- for local AIzaSyBE1V-AdGhaZMIihr7nzePGxFpe4P1RRbo -->
+        <!-- for sign apk  AIzaSyCiP27wWOpZPKTSxErejOOtIN-XvGb_hw8 -->
+
+        <activity
+            android:name="com.hiroapp.main.SplashScreen"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.ScanActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.MainActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.AlertActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.InfoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.MapActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.WifiZonesActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.hiroapp.main.WifiInfoActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <receiver
+            android:name="com.hiroapp.main.AutoStart"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.RSSI_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
