@@ -79,6 +79,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	public static Context mcontext;
 	private ImageView imgaddwifi;
+	public static MainActivity instance = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +91,8 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		registerReceiver(mGattUpdateReceiver, Utils.makeIntentFilter());
 
+		this.instance = this;
+		
 		initScreen();
 		setListener();
 
@@ -131,7 +134,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	/**
 	 * Initialization of the objects;
 	 */
-	private void initScreen() {
+	public void initScreen() {
 		// TODO Auto-generated method stub
 //		context = this;
 		mcontext = this;
@@ -183,7 +186,8 @@ public class MainActivity extends Activity implements OnClickListener,
 				if (ScanBGService.hash_service_connected_device_list != null
 						& ScanBGService.hash_service_connected_device_list
 								.size() > 0) {
-
+					Log.e("bbMainActivity -189-","checkBDA()----");
+					// pregunta si la mac esta conenida en el array del servicio
 					if (ScanBGService.hash_service_connected_device_list
 							.containsKey(mac_add)) {
 						// verify the bda is conneted or not
@@ -197,6 +201,7 @@ public class MainActivity extends Activity implements OnClickListener,
 						bda.setLatitude(model.getLatitude());
 						bda.setLongitude(model.getLongitude());
 						bda.setDeviceMacAddress(model.getDeviceMacAddress());
+						// crea array con dispositivos.
 						mLeDeviceListAdapter.addDeviceTolist(bda);
 						mLeDeviceListAdapter.notifyDataSetChanged();
 
@@ -218,6 +223,7 @@ public class MainActivity extends Activity implements OnClickListener,
 						}
 
 					} else {
+						// si no esta contenido lo crea el layout con los datos pero en estado desconetado
 						DeviceInfoModel model = device_list.get(mac_add);
 						BluetoothDeviceActor bda = new BluetoothDeviceActor();
 						bda.setContext(MainActivity.this);
@@ -227,12 +233,13 @@ public class MainActivity extends Activity implements OnClickListener,
 						bda.setLongitude(model.getLongitude());
 						bda.setDeviceMacAddress(model.getDeviceMacAddress());
 						bda.setDevmodel(model);
+						// crea array con dispositivos.
 						mLeDeviceListAdapter.addDeviceTolist(bda);
 						mLeDeviceListAdapter.notifyDataSetChanged();
 					}
 
 				} else {
-
+					// si bgservice es null o 0 lo crea el layout con los datos pero en estado desconetado
 					DeviceInfoModel model = device_list.get(mac_add);
 					BluetoothDeviceActor bda = new BluetoothDeviceActor();
 					bda.setContext(MainActivity.this);
@@ -242,6 +249,7 @@ public class MainActivity extends Activity implements OnClickListener,
 					bda.setLongitude(model.getLongitude());
 					bda.setDeviceMacAddress(model.getDeviceMacAddress());
 					bda.setDevmodel(model);
+					// crea array con dispositivos.
 					mLeDeviceListAdapter.addDeviceTolist(bda);
 					mLeDeviceListAdapter.notifyDataSetChanged();
 				}
@@ -267,8 +275,9 @@ public class MainActivity extends Activity implements OnClickListener,
 			startActivity(i);
 		}
 
+		
 	}
-
+	
 	/**
 	 * Start Background service of the app. that scan Hiro in background if not
 	 * connected.
@@ -292,7 +301,7 @@ public class MainActivity extends Activity implements OnClickListener,
 	 * 
 	 * @return
 	 */
-	static boolean isMyServiceRunning() {
+	public static boolean isMyServiceRunning() {
 		try {
 			final ActivityManager manager;
 			if (mcontext != null) {
@@ -504,6 +513,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 		// check if GPS enabled
 		if (gps.canGetLocation()) {
+			Log.e("MAPS -511-"," The hiro is disconnected");
 			double latitude = gps.getLatitude();
 			double longitude = gps.getLongitude();
 
@@ -515,6 +525,8 @@ public class MainActivity extends Activity implements OnClickListener,
 
 			lastConnectedBDA.setLatitude(latitude);
 			lastConnectedBDA.setLongitude(longitude);
+		}else{
+		Log.e("MAPS -524-"," The hiro is disconnected");
 		}
 
 		// checkBDA();
@@ -624,6 +636,7 @@ public class MainActivity extends Activity implements OnClickListener,
 
 	}
 
+	// it does nothing
 	@Override
 	public void updateRSSI(final BluetoothDeviceActor bluetoothDeviceActor) {
 		// TODO Auto-generated method stub

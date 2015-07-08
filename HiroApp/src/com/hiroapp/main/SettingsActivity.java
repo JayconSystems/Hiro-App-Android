@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
@@ -28,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.hiroapp.common.BluetoothDeviceActor;
 import com.hiroapp.common.Utils;
@@ -35,6 +37,12 @@ import com.hiroapp.dbhelper.DBHelper;
 import com.hiroapp.font.OpenSansLight;
 import com.hiroapp.model.DeviceInfoModel;
 import com.hiroapp.scanservice.ScanBGService;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.GRAY;
+import static android.graphics.Color.GREEN;
+import static android.widget.Toast.*;
 
 public class SettingsActivity extends Activity implements OnClickListener {
 
@@ -164,11 +172,11 @@ public class SettingsActivity extends Activity implements OnClickListener {
 							boolean isChecked) {
 						if (isChecked) {
 							dbhelper.updateDeviceInfo(macAddress,
-									"NotificationIndication", 1);
-						} else {
+                                    "NotificationIndication", 1);
+                        } else {
 							dbhelper.updateDeviceInfo(macAddress,
-									"NotificationIndication", 0);
-						}
+                                    "NotificationIndication", 0);
+													}
 					}
 				});
 
@@ -180,9 +188,11 @@ public class SettingsActivity extends Activity implements OnClickListener {
 				if (isChecked) {
 					dbhelper.updateDeviceInfo(macAddress,
 							"NotificationDisconnectAlert", 1);
+                    txtDisconnectRingtone.setTextColor(BLACK);
 				} else {
 					dbhelper.updateDeviceInfo(macAddress,
 							"NotificationDisconnectAlert", 0);
+                    txtDisconnectRingtone.setTextColor(GRAY);
 				}
 			}
 		});
@@ -248,23 +258,29 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 				if (model.isNotificationIndication() == 1)
 					chkNotification.setChecked(true);
+
 				else
 					chkNotification.setChecked(false);
 
 				if (model.isNotificationDisconnectAlert() == 1)
-					chkSoundAlert.setChecked(true);
+                {
+                    chkSoundAlert.setChecked(true);
+                txtDisconnectRingtone.setTextColor(BLACK);
+                }
 				else
+                {
 					chkSoundAlert.setChecked(false);
+                txtDisconnectRingtone.setTextColor(GRAY);
+                }
 
-				if (model.isHiroDisBeepAlert() == 1) {
+                if (model.isHiroDisBeepAlert() != 1) {
+                    chkherobeepAlert.setChecked(false);
+                    swHeroAlert.setEnabled(false);
+                } else {
 					chkherobeepAlert.setChecked(true);
 					swHeroAlert.setEnabled(true);
-				} else {
-					chkherobeepAlert.setChecked(false);
-					swHeroAlert.setEnabled(false);
 				}
-
-				if (model.isHiroDisconnectBeep() == 1) {
+                if (model.isHiroDisconnectBeep() == 1) {
 					swHeroAlert.setImageResource(R.drawable.sw_high);
 					if (MainActivity.BDA.isConnected()) {
 						MainActivity.BDA.deviceIsReadyForCommunication(
@@ -281,7 +297,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 				}
 
 				if (model.isHiroBeepVolume() == 1)
-					swBeep.setImageResource(R.drawable.sw_high);
+                    swBeep.setImageResource(R.drawable.sw_high);
 				else
 					swBeep.setImageResource(R.drawable.sw_mild);
 
@@ -315,6 +331,7 @@ public class SettingsActivity extends Activity implements OnClickListener {
 				Activity.MODE_WORLD_WRITEABLE);
 
 		txtDisconnectRingtone = (OpenSansLight) findViewById(R.id.Settings_txt_defaultring);
+
 		txtPhoneRing = (OpenSansLight) findViewById(R.id.Settings_txt_defaultring_for_phone);
 		txtDelete = (OpenSansLight) findViewById(R.id.delete);
 		// txtWifiName = (OpenSansLight)
@@ -323,9 +340,11 @@ public class SettingsActivity extends Activity implements OnClickListener {
 
 		appStorage = (HeroApp_App) this.getApplicationContext();
 		dbhelper = appStorage.getDbhelper();
+
 	}
 
-	/**
+
+    /**
 	 * define click listener of the objects.
 	 */
 	private void setListener() {
@@ -350,44 +369,47 @@ public class SettingsActivity extends Activity implements OnClickListener {
 			Intent i = new Intent(SettingsActivity.this, InfoActivity.class);
 			startActivity(i);
 
-		} else if (v == txtDisconnectRingtone) {
-			Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
-					RingtoneManager.TYPE_NOTIFICATION);
-			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
-			String disRing = model.getDisconnectRing();
-			if (disRing == null || disRing.equalsIgnoreCase("")) {
-				intent.putExtra(
-						RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-						RingtoneManager
-								.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-			} else {
-				Uri uri = Uri.parse(model.getDisconnectRing());
-				intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-						uri);
-			}
-			this.startActivityForResult(intent, 5);
-		} else if (v == txtPhoneRing) {
-			Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
-					RingtoneManager.TYPE_ALL);
-			String phoneRing = model.getPhoneRing();
-			if (phoneRing == null || phoneRing.equalsIgnoreCase("")) {
-				intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-						RingtoneManager
-								.getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-			} else {
-				Uri uri = Uri.parse(model.getPhoneRing());
-				intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-						uri);
-			}
-			intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
-			this.startActivityForResult(intent, 6);
-		} else if (v == imgback) {
-			finish();
-		} else if (v == txtDelete) {
-			openWarningDialog(position);
-		}
+		} else {
+            if (v == txtDisconnectRingtone && chkSoundAlert.isChecked()) {
+
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
+                        RingtoneManager.TYPE_NOTIFICATION);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+                String disRing = model.getDisconnectRing();
+                if (disRing == null || disRing.equalsIgnoreCase("")) {
+                    intent.putExtra(
+                            RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                            RingtoneManager
+                                    .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+                } else {
+                    Uri uri = Uri.parse(model.getDisconnectRing());
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                            uri);
+                }
+                this.startActivityForResult(intent, 5);
+            }else if (v == txtPhoneRing) {
+                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE,
+                        RingtoneManager.TYPE_ALL);
+                String phoneRing = model.getPhoneRing();
+                if (phoneRing == null || phoneRing.equalsIgnoreCase("")) {
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                            RingtoneManager
+                                    .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+                } else {
+                    Uri uri = Uri.parse(model.getPhoneRing());
+                    intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
+                            uri);
+                }
+                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+                this.startActivityForResult(intent, 6);
+            } else if (v == imgback) {
+                finish();
+            } else if (v == txtDelete) {
+                openWarningDialog(position);
+            }
+        }
 
 	}
 

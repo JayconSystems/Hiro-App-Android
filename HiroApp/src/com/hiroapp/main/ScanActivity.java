@@ -20,11 +20,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 
 import com.hiroapp.adapter.LeDeviceListAdapter;
 import com.hiroapp.common.BluetoothDeviceActor;
+import com.hiroapp.common.ScanDev2;
 import com.hiroapp.common.ScanDevices;
 import com.hiroapp.common.ScanInterface;
 import com.hiroapp.common.Utils;
@@ -46,11 +50,15 @@ public class ScanActivity extends Activity implements OnClickListener,
 	ProgressBar prb;
 	TextView txtscanning;
 	ScanDevices scan;
+	//para volver como antes descomentar esta line y comentar la siguiente
+	//ScanDev2 scan;
 	Context context;
 	ProgressDialog progdialog;
+	BluetoothAdapter adapter;
+	
 	public static BluetoothDeviceActor BDA;
 	public static final int REQUEST_ENABLE_BT = 0001;
-	BluetoothAdapter adapter;
+	private ImageView imgback;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +76,7 @@ public class ScanActivity extends Activity implements OnClickListener,
 					Toast.LENGTH_SHORT).show();
 
 		registerReceiver(mGattUpdateReceiver, Utils.makeIntentFilter());
+		
 	}
 
 	/**
@@ -77,7 +86,8 @@ public class ScanActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 		if (adapter.isEnabled()) {
 			prb.setVisibility(View.VISIBLE);
-			scan = new ScanDevices(ScanActivity.this);
+			scan = new ScanDevices (ScanActivity.this);
+			//scan = new ScanDev2(ScanActivity.this);
 			scan.startScanning();
 		} else {
 			prb.setVisibility(View.INVISIBLE);
@@ -100,7 +110,8 @@ public class ScanActivity extends Activity implements OnClickListener,
 		case REQUEST_ENABLE_BT:
 			if (resultCode == RESULT_OK) {
 				prb.setVisibility(View.VISIBLE);
-				scan = new ScanDevices(ScanActivity.this);
+				scan = new ScanDevices (ScanActivity.this);
+				//scan = new ScanDev2(ScanActivity.this);
 				scan.startScanning();
 				txtscanning.setText("Stop");
 			} else {
@@ -119,6 +130,7 @@ public class ScanActivity extends Activity implements OnClickListener,
 	private void setListener() {
 		// TODO Auto-generated method stub
 		txtscanning.setOnClickListener(this);
+		imgback.setOnClickListener(this);
 	}
 
 	/**
@@ -133,8 +145,9 @@ public class ScanActivity extends Activity implements OnClickListener,
 		prb = (ProgressBar) findViewById(R.id.progressbar);
 		lv = (ListView) findViewById(R.id.lstscanning);
 		txtscanning = (TextView) findViewById(R.id.txtscan);
+		imgback = (ImageView) findViewById(R.id.imageView1);
+		
 		lv.setAdapter(mLeDeviceListAdapter);
-
 		lv.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -149,6 +162,8 @@ public class ScanActivity extends Activity implements OnClickListener,
 			}
 		});
 	}
+	
+
 
 	@Override
 	public void connectedDevice(BluetoothDevice device) {
@@ -187,9 +202,13 @@ public class ScanActivity extends Activity implements OnClickListener,
 				}
 			}
 			break;
-
 		default:
 			break;
+		}
+		if (v== imgback)
+		{
+			scan.stopScanning();
+			finish();
 		}
 	}
 
@@ -289,14 +308,22 @@ public class ScanActivity extends Activity implements OnClickListener,
 	public void showLogicalNameDialog(final BluetoothDevice btdevice) {
 		final Dialog dlg = new Dialog(ScanActivity.this);
 		dlg.setContentView(R.layout.dlg_logical_name_layout);
+		dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 		dlg.setTitle(getResources().getString(R.string.app_name));
 		dlg.setCancelable(true);
 		Button b1 = (Button) dlg.findViewById(R.id.dlg_logical_name_btn_OK);
+		
 
 		dlg.setOnDismissListener(new OnDismissListener() {
+			
+			EditText et = (EditText) dlg
+					.findViewById(R.id.dlg_logical_name_edt_lname);
+			
 			@Override
 			public void onDismiss(DialogInterface dialog) {
-				// TODO Auto-generated method stub
+				
+				et.clearFocus();
+				Utils.hidekeyboard(ScanActivity.this);
 			}
 		});
 		b1.setOnClickListener(new OnClickListener() {
@@ -306,7 +333,6 @@ public class ScanActivity extends Activity implements OnClickListener,
 				EditText et = (EditText) dlg
 						.findViewById(R.id.dlg_logical_name_edt_lname);
 				if (!et.getText().toString().equals("")) {
-					Utils.hidekeyboard(ScanActivity.this);
 					progdialog = ProgressDialog.show(ScanActivity.this, "",
 							"Please Wait Connecting Device", true);
 					progdialog.setCancelable(true);
@@ -320,10 +346,27 @@ public class ScanActivity extends Activity implements OnClickListener,
 					BDA.connectedDevice(btdevice);
 					BDA.setDevmodel(devinfo);
 					BDA.setBda(BDA);
+					Utils.hidekeyboard(ScanActivity.this);
 				} else {
+					dlg.dismiss();
 					Toast.makeText(ScanActivity.this,
 							"Field should not be blank.", Toast.LENGTH_SHORT)
 							.show();
+				}
+			}
+		});
+		
+		EditText et = (EditText) dlg
+				.findViewById(R.id.dlg_logical_name_edt_lname);
+		
+		et.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+					
+				if (!hasFocus)
+				{
+					dlg.dismiss();
 				}
 			}
 		});

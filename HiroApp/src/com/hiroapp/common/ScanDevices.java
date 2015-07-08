@@ -18,10 +18,13 @@ import android.bluetooth.BluetoothManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import com.hiroapp.model.DeviceInfoModel;
 import com.hiroapp.scanservice.ScanBGService;
+import com.hiroapp.common.ScanDev2;
 
 @SuppressLint("NewApi")
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -33,13 +36,24 @@ public class ScanDevices {
 	public ScanInterface scaninterface;
 	public boolean isDeviceConnected = false;
 	private Timer timer;
-	private ScheduleTask scheduleTask;
+	//private ScheduleTask scheduleTask;
 	int transmissionpower = 0;
 	String devicename = null;
 	String comp_spe = "";
 	String uuid;
 	protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	String mac_address = "";
+	
+	
+	//-------
+	private final static int SCAN_INTERVAL=250;
+	
+	private boolean isScanning = false;
+	
+	int aux=0;
+	//-----
+	
+	
 
 	@SuppressLint("NewApi")
 	public ScanDevices(Context mcontext) {
@@ -48,17 +62,25 @@ public class ScanDevices {
 		mBluetoothAdapter = bluetoothManager.getAdapter();
 		context = mcontext;
 		scaninterface = (ScanInterface) mcontext;
+		Log.w("----ScanDevices-----","line ------------- 65");
 	}
 
 	@SuppressLint("NewApi")
-	public ScanDevices(Context mcontext,
+	/*public ScanDevices(Context mcontext,
 			LinkedHashMap<String, DeviceInfoModel> devlist) {
 		final BluetoothManager bluetoothManager = (BluetoothManager) mcontext
 				.getSystemService(Context.BLUETOOTH_SERVICE);
 		mBluetoothAdapter = bluetoothManager.getAdapter();
 		context = mcontext;
-		startScanning();
-	}
+		//startScanning();
+		Log.e("scanDevices","begginig scan");
+		//beginScanning();
+		Log.w("ScanDevice","78");
+		ScanDev2 s= new ScanDev2();
+		Thread t = new Thread(s);
+		t.start();
+		
+	}*/
 
 	public void startScanning() {
 		scanDeviceNameList = new ArrayList<String>();
@@ -72,8 +94,52 @@ public class ScanDevices {
 			// Log.e("StopScanning", e.getMessage());
 		}
 	}
+	
+/*	public void beginScanning() { 
+		Handler scanHandler = new Handler();
+		scanHandler.postDelayed(new Runnable(){
+		public void run() {
+			aux=1;
+			Looper.prepare();
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            Log.e("aaa","bbbbbbbbbbbbbbb");
 
-	class ScheduleTask extends TimerTask {
+            if (isScanning) {
+                adapter.stopLeScan(mLeScanCallback);
+            } else if (!adapter.startLeScan(mLeScanCallback)) {
+                // an error occurred during startLeScan
+            }
+
+            isScanning = !isScanning;
+		
+		
+							}
+												}, SCAN_INTERVAL);
+    							}
+    							
+   */
+
+   /* private Runnable scanRunnable = new Runnable() {
+        @Override
+        public void run() {
+            BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            Looper.prepare();
+            Log.e("aaa","bbbbbbbbbbbbbbb");
+
+            if (isScanning) {
+                adapter.stopLeScan(mLeScanCallback);
+            } else if (!adapter.startLeScan(mLeScanCallback)) {
+                // an error occurred during startLeScan
+            }
+
+            isScanning = !isScanning;
+
+            scanHandler.postDelayed(this, SCAN_INTERVAL);
+            
+        }
+    };*/
+
+	/*class ScheduleTask extends TimerTask {
 		@Override
 		public void run() {
 
@@ -86,7 +152,7 @@ public class ScanDevices {
 
 		final Intent intent = new Intent(action);
 		context.sendBroadcast(intent);
-	}
+	}*/
 
 	// Device scan callback.
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -95,12 +161,15 @@ public class ScanDevices {
 		@Override
 		public void onLeScan(final BluetoothDevice device, int rssi,
 				final byte[] scanRecord) {
-
+			if (aux==1){
+				Log.e("Aux"," -165-Aux = 1");
+			}
+			Log.e("Aux","-167-Aux = 1");
 			String deviceName = device.getAddress();
 
 			if (scanDeviceNameList != null
 					&& scanDeviceNameList.contains(device.getAddress())) {
-
+				// ScanBGService.device_list is the database content.
 				if (ScanBGService.device_list != null
 						&& ScanBGService.device_list.size() > 0
 						&& ScanBGService.device_list.containsKey(deviceName)) {
@@ -142,7 +211,8 @@ public class ScanDevices {
 					makeandconnectBDA(device, devmodel);
 				} else if (device != null && device.getName() != null
 						&& !device.getName().toString().equalsIgnoreCase("")) {
-					if (device.getName().toString().equalsIgnoreCase("hiro")) {
+					//if to add all different hiros version 'hiro14' 'hiro15' 'hiroxx'
+					if ((device.getName().toString()).substring(0, 4).equalsIgnoreCase("hiro")) {
 						scanDeviceNameList.add(device.getAddress());
 						if (scaninterface != null) {
 							scaninterface.addDevice(device, uuid,

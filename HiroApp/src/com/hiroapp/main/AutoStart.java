@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -37,10 +38,20 @@ public class AutoStart extends BroadcastReceiver {
 	LinkedHashMap<String, DeviceInfoModel> device_list;
 	private Context mcontext;
 
+	
+	
+	
+	
+	
+	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		// TODO Auto-generated method stub
 		String action = intent.getAction();
+		
+		
+		
+		
 //		Log.e(":::::::::::::::Inside Receiver for auto start ", ":::::::"
 //				+ action);
 
@@ -49,6 +60,44 @@ public class AutoStart extends BroadcastReceiver {
 		device_list = new LinkedHashMap<String, DeviceInfoModel>();
 		mcontext = context;
 
+		
+		
+		
+		if (intent != null
+				&& intent.getAction().equals(
+						"com.hiro.android.stop")) {
+			
+			/*Intent actividadALanzar = new Intent(mcontext, Stopsound.class);
+			
+            mcontext.startActivity(actividadALanzar);
+            */
+			String name = intent.getStringExtra("name");
+			Log.e("name---> ", "name -->"+name);
+			Intent intentone = new Intent(context.getApplicationContext(), Stopsound.class);
+            intentone.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            
+            context.startActivity(intentone);
+            
+            
+			
+           
+		}else{
+			if (intent != null
+					&& intent.getAction().equals(
+							"com.hiro.android.stop2")) {
+				if(mcontext!=null){
+					//close activity
+					Stopsound.instance.finish();
+				}		
+				}
+		
+		
+		}
+		
+		
+		
+		
+		
 		if (intent != null
 				&& intent.getAction().equals(
 						"android.intent.action.BOOT_COMPLETED")) {
@@ -127,7 +176,6 @@ public class AutoStart extends BroadcastReceiver {
 	}
 
 	private void checkBDA() {
-
 		// TODO Auto-generated method stub
 		if (dbhelper.checkIfDeviceCount()) {
 			// device Found then verify from service that this device is

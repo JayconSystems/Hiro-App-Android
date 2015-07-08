@@ -1,0 +1,353 @@
+package com.hiroapp.common;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+
+import com.hiroapp.main.MainActivity;
+import com.hiroapp.main.R;
+
+public class Utils {
+
+	public final static String ACTION_GATT_CONNECTED = "ACTION_GATT_CONNECTED";
+	public final static String ACTION_GATT_DISCONNECTED = "ACTION_GATT_DISCONNECTED";
+	public final static String ACTION_DEVICE_NOT_FOUND = "ACTION_DEVICE_NOT_FOUND";
+	public final static String ACTION_CONNECT_FAIL = "ACTION_CONNECT_FAIL";
+	public final static String ACTION_BATTERY_LEVEL = "ACTION_BATTERY_LEVEL";
+
+	public final static String ACTION_DESCRIPTOR_WRITE = "ACTION_DESCRIPTOR_WRITE";
+	public final static String ACTION_ALERT = "ACTION_ALERT";
+	public final static String ACTION_RSSI = "ACTION_RSSI";
+
+	public static BluetoothDeviceActor bdaForbattery;
+	
+	public static BluetoothDeviceActor bda;
+	
+	public static BluetoothAdapter btAdapter;
+
+	public static AlertDialog alertDialog = null;
+	
+	public static int REQUEST_ENABLE_BT = 0001;
+
+	
+	public static BluetoothDeviceActor getBdaForbattery() {
+		return bdaForbattery;
+	}
+
+	public static void setBdaForbattery(BluetoothDeviceActor bdaForbattery) {
+		Utils.bdaForbattery = bdaForbattery;
+	}
+
+	public static BluetoothDeviceActor getBda() {
+		return bda;
+	}
+
+	public static void setBda(BluetoothDeviceActor bda1) {
+		bda = bda1;
+	}
+
+	public static IntentFilter makeIntentFilter() {
+
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(ACTION_GATT_CONNECTED);
+		filter.addAction(ACTION_GATT_DISCONNECTED);
+		filter.addAction(ACTION_DEVICE_NOT_FOUND);
+		filter.addAction(ACTION_CONNECT_FAIL);
+		filter.addAction(ACTION_BATTERY_LEVEL);
+		filter.addAction(ACTION_DESCRIPTOR_WRITE);
+		filter.addAction(ACTION_ALERT);
+		filter.addAction(ACTION_RSSI);
+
+		return filter;
+	}
+
+	public static BluetoothAdapter getBTAdapter() {
+		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		return btAdapter;
+	}
+	
+
+	/**
+	 * Checking whether net connection is available or not.
+	 * 
+	 * @param nContext
+	 * @return true if net connection is available otherwise false
+	 */
+	public static boolean isNetworkAvailable(Context nContext) {
+		boolean isNetAvailable = false;
+		if (nContext != null) {
+			ConnectivityManager mConnectivityManager = (ConnectivityManager) nContext
+					.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+			if (mConnectivityManager != null) {
+				boolean mobileNetwork = false;
+				boolean wifiNetwork = false;
+
+				boolean mobileNetworkConnecetd = false;
+				boolean wifiNetworkConnecetd = false;
+
+				NetworkInfo mobileInfo = mConnectivityManager
+						.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+				NetworkInfo wifiInfo = mConnectivityManager
+						.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+				if (mobileInfo != null)
+					mobileNetwork = mobileInfo.isAvailable();
+
+				if (wifiInfo != null)
+					wifiNetwork = wifiInfo.isAvailable();
+
+				if (wifiNetwork == true || mobileNetwork == true) {
+					if (mobileInfo != null)
+						mobileNetworkConnecetd = mobileInfo
+								.isConnectedOrConnecting();
+					if (wifiInfo != null)
+						wifiNetworkConnecetd = wifiInfo
+								.isConnectedOrConnecting();
+				}
+
+				isNetAvailable = (mobileNetworkConnecetd || wifiNetworkConnecetd);
+			}
+		}
+		return isNetAvailable;
+	}
+
+	
+	public static void showBluetoothDialog(String title, String msg,
+			final Context context) {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+		dialogBuilder.setPositiveButton("Settings",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+						Intent enableIntent = new Intent(
+								BluetoothAdapter.ACTION_REQUEST_ENABLE);
+						((Activity) context).startActivityForResult(
+								enableIntent, Utils.REQUEST_ENABLE_BT);
+					}
+				});
+		dialogBuilder.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+		dialogBuilder.setTitle(title);
+		dialogBuilder.setMessage(msg);
+		dialogBuilder.show();
+	}
+
+	public static void showOKAlertMsg(String title, String msg, Context context) {
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+		dialogBuilder.setNeutralButton("Ok",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.dismiss();
+					}
+				});
+
+		dialogBuilder.setTitle(title);
+		dialogBuilder.setMessage(msg);
+		dialogBuilder.show();
+	}
+
+
+	public static void hidekeyboard(Context context) {
+		InputMethodManager inputManager = (InputMethodManager) context
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		// check if no view has focus:
+		View view = ((Activity) context).getCurrentFocus();
+		if (view != null) {
+			inputManager.hideSoftInputFromWindow(view.getWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+		}
+	}
+
+	public static void generateNotification(Context context,
+			String title, String msg, int id, boolean isDisSound) {
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(context.NOTIFICATION_SERVICE);
+
+		Notification n = new Notification.Builder(context)
+				.setContentTitle(title).setContentText(msg)
+				.setDefaults(Notification.DEFAULT_VIBRATE)
+				.setSmallIcon(R.drawable.notification_icon).build();
+		
+		if(!isDisSound)
+			n.flags |= Notification.DEFAULT_SOUND;
+		
+		notificationManager.notify(id, n);
+	}
+	
+	public static void generateNotificationForConnect(Context context,
+			String title, String msg, int id) {
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(context.NOTIFICATION_SERVICE);
+
+		Notification n = new Notification.Builder(context)
+				.setContentTitle(title).setContentText(msg)
+				.setSmallIcon(R.drawable.notification_icon).build();
+		notificationManager.notify(id, n);
+	}
+	
+	
+	public static void removeNotification(Context context,int id) {
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(context.NOTIFICATION_SERVICE);
+
+		notificationManager.cancel(id);
+	}
+	
+	
+	public static void generateNotificationForFindPhone(Context context,
+			String title, String msg, int id) {
+		
+		Intent i = new Intent(context,MainActivity.class);
+        
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+				| Intent.FLAG_ACTIVITY_CLEAR_TOP
+				| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        
+    	PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
+				i, PendingIntent.FLAG_UPDATE_CURRENT);
+		
+		
+		NotificationManager notificationManager = (NotificationManager) context
+				.getSystemService(context.NOTIFICATION_SERVICE);
+
+		 NotificationCompat.Builder mBuilder =
+                 new NotificationCompat.Builder(context)
+         .setSmallIcon(R.drawable.notification_icon)
+         .setContentTitle(title)
+         .setContentText(msg)
+         .setAutoCancel(true);
+         mBuilder.setContentIntent(pendingIntent);
+         notificationManager.notify(id, mBuilder.build());
+		
+	}
+	
+	public static void makeDirectory(Context context) {
+
+		if (Environment.getExternalStorageDirectory().exists()) {
+			File wallpaperDirectory = new File(
+					Environment.getExternalStorageDirectory() + File.separator
+							+ context.getString(R.string.FolderPath));
+
+			if (!wallpaperDirectory.exists())
+				wallpaperDirectory.mkdirs();
+
+		} else {
+//			Log.e("Not Exist", "Sd Cards Not Exist");
+		}
+
+	}
+	
+	public static Bitmap resizeBitmap(int targetW, int targetH, String path) {
+		BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+		bmOptions.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, bmOptions);
+		int photoW = bmOptions.outWidth;
+		int photoH = bmOptions.outHeight;
+
+		int scaleFactor = 1;
+		if ((targetW > 0) || (targetH > 0)) {
+			scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+		}
+
+		bmOptions.inJustDecodeBounds = false;
+		bmOptions.inSampleSize = scaleFactor;
+		bmOptions.inPurgeable = true;
+
+		return BitmapFactory.decodeFile(path, bmOptions);
+	}
+	
+	public static Bitmap decodeUri(Context context, Uri selectedImage)
+			throws FileNotFoundException {
+
+		// Decode image size
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inJustDecodeBounds = true;
+		BitmapFactory.decodeStream(context.getContentResolver()
+				.openInputStream(selectedImage), null, o);
+
+		// Find the correct scale value. It should be the power of 2.
+		final int REQUIRED_SIZE_WIDTH = 480, REQUIRED_SIZE_HEIGHT = 800;
+		int width_tmp = o.outWidth, height_tmp = o.outHeight;
+		int scale = 1;
+
+		if (height_tmp > REQUIRED_SIZE_HEIGHT
+				|| width_tmp > REQUIRED_SIZE_WIDTH) {
+			if (width_tmp > height_tmp) {
+				scale = Math.round((float) height_tmp
+						/ (float) REQUIRED_SIZE_HEIGHT);
+			} else {
+				scale = Math.round((float) width_tmp
+						/ (float) REQUIRED_SIZE_WIDTH);
+			}
+		}
+
+		// Decode with inSampleSize
+		BitmapFactory.Options o2 = new BitmapFactory.Options();
+		o2.inSampleSize = scale;
+		return BitmapFactory.decodeStream(context.getContentResolver()
+				.openInputStream(selectedImage), null, o2);
+
+	}
+	
+	
+	public static void saveImageFile(Bitmap bitmap, String path) {
+		try {
+
+			File ImageFile = new File(path);
+			if (!ImageFile.exists()) {
+				ImageFile.createNewFile();
+			} else {
+				ImageFile.delete();
+				ImageFile.createNewFile();
+			}
+			if (bitmap != null) {
+				ByteArrayOutputStream bytes1 = new ByteArrayOutputStream();
+				bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes1);
+				byte[] byteArray = bytes1.toByteArray();
+				FileOutputStream imagefo = new FileOutputStream(ImageFile);
+				imagefo.write(byteArray);
+				imagefo.close();
+			}
+			// Save image in /images and /thumb folder
+
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			bitmap = null;
+		}
+	}
+
+
+}

@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -31,7 +32,9 @@ import android.bluetooth.BluetoothGattServerCallback;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -44,13 +47,19 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.inputmethod.CorrectionInfo;
+import android.widget.Toast;
 
 import com.hiroapp.dbhelper.DBHelper;
 import com.hiroapp.main.HeroApp_App;
 import com.hiroapp.main.MainActivity;
 import com.hiroapp.main.R;
+import com.hiroapp.main.SplashScreen;
+import com.hiroapp.main.Stopsound;
 import com.hiroapp.model.CharacteristicsModel;
 import com.hiroapp.model.DeviceInfoModel;
 import com.hiroapp.model.OperationModel;
@@ -74,6 +83,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 	private boolean isConnected = false;
 	private Thread thread;
 	private Thread thread1;
+	private volatile Looper mMyLooper;
 
 	public ArrayList<BDACommand> bdaCommandQueue;
 	private Queue<BluetoothGattDescriptor> descriptorWriteQueue = new LinkedList<BluetoothGattDescriptor>();
@@ -89,8 +99,9 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 	public byte[] txPower = null;
 
 	private int Batterylevel;
-
+	public static int AuxSound=0;
 	private int notificationId = 0;
+	public int aux2=0; 
 
 	private DeviceInfoModel devmodel;
 
@@ -99,11 +110,14 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 
 	// private Timer timer1;
 	// private ScheduleTask1 scheduleTaskForBattery;
+	
+	
+	
 
 	private int alertlevel = 0;
 	private int linkLossAlert = 0;
 
-	private MediaPlayer mPlayer;
+	private static MediaPlayer mPlayer;
 
 	private static final UUID IMMEDIATE_ALERT_SERVICE = UUID
 			.fromString("00001802-0000-1000-8000-00805f9b34fb");
@@ -317,12 +331,29 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 
 	@Override
 	public void run() {
-		connectDevice(mDevice);
+		
+		// handler with looper to solve the disconnect problem.
+		Looper.prepare();
+		Handler handler = new Handler();
+        handler.post(scanRunnable);
+        Looper.loop();
+        
+		
 	}
+	
+	 private Runnable scanRunnable = new Runnable() {
+	        @Override
+	        public void run() {
+	        	connectDevice(mDevice);
+	        }
+	        };
+	
+	
 
 	public void startThread() {
 		thread = new Thread(this);
 		thread.start();
+		
 	}
 
 	public void stopThread() {
@@ -344,6 +375,8 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 	 *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
 	 *         callback.
 	 */
+	public static Vibrator v ;
+	long[] pattern = {0, 1000,500,1000,1500,2000,1200,1000};
 	public boolean connectDevice(final BluetoothDevice device) {
 
 		if (device == null) {
@@ -396,6 +429,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 
 					// if (disInterface != null)
 					// disInterface.updateRSSI(BluetoothDeviceActor.this);
+					//Log.e("BluetoothDeaviceActor -432-","sdasdsadasdasdsad");
 
 					Utils.setBda(BluetoothDeviceActor.this);
 					broadcastUpdateRSSI(Utils.ACTION_RSSI, averageRSSI);
@@ -418,10 +452,12 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 				int newState) {
 			super.onConnectionStateChange(gatt, status, newState);
 
+			//Log.e("BDA","B-447- Onconnection statechange" + newState);
 			String intentAction;
 
 			if (newState == BluetoothProfile.STATE_CONNECTED) {
 				try {
+					aux2=0;
 					setConnected(true);
 					if (failerTask != null && failTimer != null) {
 						failerTask.cancel();
@@ -444,18 +480,23 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 					}
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
+					Log.e("error BDA","460");
 					e.printStackTrace();
 				}
 			} else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-				// Log.e(TAG, "Disconnected from GATT server.");
+				aux2=aux2+1;
+				//Log.e(TAG, "GATT "+ aux2);
+				//if(aux2==2){
+				 Log.e(TAG, "Disconnected from GATT server." + aux2);
 				setConnected(false);
 				intentAction = Utils.ACTION_GATT_DISCONNECTED;
 				try {
 					if (mBluetoothGatt != null)
-						refreshDeviceCache(mBluetoothGatt);
+					refreshDeviceCache(mBluetoothGatt);
 					getmBluetoothGatt().close();
 					setmBluetoothGatt(null);
 				} catch (Exception e) {
+					Log.e("error BDA","473");
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -465,6 +506,9 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 				Log.e(TAG, "Disconnect BDA = "
 						+ getDevmodel().getDeviceLogicalName());
 				Log.e(TAG, "Disconnect disInterface = " + disInterface);
+				//ScanDev2.a.remove(getDevmodel().getDeviceMacAddress());
+				Log.e("BluetoothDA","B-484-"+getDevmodel().getDeviceMacAddress() );
+				Log.e("BluetoothDA","B-485- cantidad="+ScanDev2.a.size());
 
 				if (disInterface != null)
 					disInterface.disconnectBda(BluetoothDeviceActor.this);
@@ -491,9 +535,9 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 				soundTimer = new Timer();
 				SoundTask = new SoundTask();
 				soundTimer.schedule(SoundTask, 20000, 50000000);
-
+//50000000
 			}
-
+		//}
 		}
 
 		@Override
@@ -505,7 +549,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 			broadcastUpdate(intentAction, -1);
 			discoverServices(gatt.getServices());
 
-			Log.e(TAG, "onServicesDiscovered called");
+			Log.e(TAG, "onServicesDiscovered called -540-");
 
 		}
 
@@ -1140,6 +1184,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 				// Log.e("BLEMainActivity:onConnectionStateChange", "device : "
 				// + device + " status : " + status + " new state : "
 				// + newState);
+				//Log.e("onConnectionstatechange","onConnectionstatechange -1175-");
 			}
 
 			@Override
@@ -1172,20 +1217,66 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 				int val = 0;
 				if (value != null) {
 					val = value[0];
+					
 				}
-
-				// Log.e(TAG, "value == " + val);
+				
+				Log.e(TAG, "value == " + val + "AuxSound == " + AuxSound);
 
 				// Log.e("BLEMainActivity", "device : " + device.getAddress()
 				// + " characteristic : " + characteristic.getUuid()
 				// + "Value = " + value.toString() + "requestId = "
 				// + requestId + " Service == "
 				// + characteristic.getService().getUuid());
-
+				v = (Vibrator) mContext.getSystemService(mContext.VIBRATOR_SERVICE);
+				//long[] pattern = {0, 1000,500,1000,1500,2000,1200,1000};
+				try {
+					Log.e("aaaas12","aamplayer= " + mPlayer);
+					if (mPlayer != null && mPlayer.isPlaying()) {
+						Log.e(TAG, "aaaaaaassssss" + AuxSound);
+						playSound(0);
+						v.cancel();
+						mPlayer=null;
+						Log.e("aaaas1208","aamplayer= " + mPlayer);
+						Log.e(TAG, "aaaaaaassssss" + AuxSound);
+					}else {
+						if (!isCallActive(mContext)){
+							Log.e(TAG, "aaaaaaas" + AuxSound);
+							playSound(0);
+							playSound(2);
+						// vvv -6/26
+							
+							v.vibrate(pattern,5);
+							
+							
+							Log.e(TAG, "aaaaaaas" + AuxSound);
+							//playSound(val);
+							//stop(mContext);
+							//Toast toast = Toast.makeText(mContext, "aaa", Toast.);
+							}
+						
+					}
+					
+				} catch (Exception e) {
+					Log.e(TAG, "aaaaaaas" + e);
+					//playSound(2);
+				}
+					
+				
+				
+				// test sound in a call
+				/*if (!isCallActive(mContext)){
+					
+					
 				playSound(val);
-
+				//stop(mContext);
+				//Toast toast = Toast.makeText(mContext, "aaa", Toast.);
+				}*/
 			}
 
+			
+			
+			
+		
 			@Override
 			public void onDescriptorReadRequest(BluetoothDevice device,
 					int requestId, int offset,
@@ -1225,6 +1316,59 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 				"Gatt server setup complete : " + gattServer.toString());
 
 	}
+	
+	
+	
+	public void stop(Context context){
+		Intent sendIntent = new Intent();
+		sendIntent.setAction("com.hiro.android.stop");
+		sendIntent.putExtra("name",getName() );
+		context.sendBroadcast(sendIntent);
+	}
+	
+	public static  void stop2(Context context){
+		Intent sendIntent = new Intent();
+		sendIntent.setAction("com.hiro.android.stop2");
+		context.sendBroadcast(sendIntent);
+		BluetoothDeviceActor a= new BluetoothDeviceActor();
+		a.p();
+		//((Stopsound)mContext).finish();
+	}
+	
+	public void mp(){
+		mPlayer=null;
+		
+		}
+	
+	
+	public void p(){
+
+		//	Log.e("22222222222222222222222", "222222222222222222222222222");
+			// isSoundRinging = false;
+			try {
+				if (mPlayer != null && mPlayer.isPlaying()) {
+					mPlayer.stop();
+					mPlayer.release();
+					AuxSound=1;
+					mPlayer=null;
+					Log.e("aaaas1318","aamplayer= " + mPlayer);
+					v.cancel();
+					Log.e(TAG, "value == sss " + "AuxSound == " + AuxSound);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public boolean getPreference(String key) {
 
@@ -1236,7 +1380,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 	private void playSound(int val) {
 
 		Log.e(TAG, "playSound called");
-
+		AuxSound=0;
 		preferences = mContext.getSharedPreferences(
 				mContext.getString(R.string.app_name),
 				Activity.MODE_WORLD_WRITEABLE);
@@ -1248,7 +1392,11 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 			try {
 				if (mPlayer != null && mPlayer.isPlaying()) {
 					mPlayer.stop();
+					stop2(mContext);
 					mPlayer.release();
+					
+				}else {
+					
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
@@ -1287,7 +1435,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 					mPlayer.setLooping(false);
 					mPlayer.start();
 					setmPlayer(mPlayer);
-
+					stop(mContext);
 					mPlayer.setOnCompletionListener(new OnCompletionListener() {
 
 						@Override
@@ -1295,10 +1443,14 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 							// TODO Auto-generated method stub
 							try {
 								mPlayer.stop();
+								mPlayer=null;
 								mPlayer.release();
+								
+								Log.e("aaaas1412","aamplayer= " + mPlayer);
+								
 							} catch (IllegalStateException e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								Log.e("aaaas1412","aaexeption= " + e);
 							}
 							// isSoundRinging = false;
 
@@ -1313,7 +1465,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 					mPlayer.prepare();
 					mPlayer.setLooping(false);
 					mPlayer.start();
-
+					stop(mContext);
 					setmPlayer(mPlayer);
 
 					mPlayer.setOnCompletionListener(new OnCompletionListener() {
@@ -1324,6 +1476,7 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 							try {
 								mPlayer.stop();
 								mPlayer.release();
+								stop2(mContext);
 							} catch (IllegalStateException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -1336,6 +1489,10 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 
 			}
 		}
+		
+		
+		// new val = 3 
+		
 	}
 
 	private String getWifiSSIDName() {
@@ -1478,5 +1635,17 @@ public class BluetoothDeviceActor implements Runnable, ScanInterface {
 		}
 		return false;
 	}
-
+	
+	
+	public static boolean isCallActive(Context context){
+		   AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+		   if(manager.getMode()==AudioManager.MODE_IN_CALL){
+		         return true;
+		   }
+		   else{
+		       return false;
+		   }
+		}
+	
+	
 }

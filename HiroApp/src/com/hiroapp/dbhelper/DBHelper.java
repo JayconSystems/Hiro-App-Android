@@ -23,8 +23,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import com.google.android.gms.internal.is;
+
+
+
+import android.widget.Toast;
+
+import com.hiroapp.main.MainActivity;
+//import com.google.android.gms.internal.is;
 import com.hiroapp.main.R;
 import com.hiroapp.model.CharacteristicsModel;
 import com.hiroapp.model.DeviceInfoModel;
@@ -403,7 +411,18 @@ public class DBHelper extends SQLiteOpenHelper {
 				+ deviceMacAddress + "'", null);
 
 	}
+	
+	public void updateLogicalName(String mac, String et ) {
+		ContentValues value = new ContentValues();
+		value.put("DeviceLogicalName", et);
+		db.update(tbl_deviceinfo, value, "DeviceMacAddress = '"
+				+ mac + "'", null);
+		
+		
+	}
+	
 
+	
 	public void removeDevice(String deviceMacAddress) {
 
 		db.delete(tbl_deviceinfo, "DeviceMacAddress = '" + deviceMacAddress

@@ -17,6 +17,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.hiroapp.common.BluetoothDeviceActor;
+import com.hiroapp.common.ScanDev2;
 import com.hiroapp.common.ScanDevices;
 import com.hiroapp.dbhelper.DBHelper;
 import com.hiroapp.main.HeroApp_App;
@@ -24,7 +25,7 @@ import com.hiroapp.model.DeviceInfoModel;
 
 public class ScanBGService extends Service {
 
-	static Context context;
+	public static Context context;
 	private Timer timer;
 	private ScheduleTask scheduleTask;
 	public static Intent intentService = null;
@@ -50,7 +51,7 @@ public class ScanBGService extends Service {
 		dbhelper = appStorage.getDbhelper();
 		timer = new Timer();
 		scheduleTask = new ScheduleTask();
-		timer.schedule(scheduleTask, 500, 25000);
+		timer.schedule(scheduleTask, 2000, 25000);
 
 		return START_STICKY;
 	}
@@ -132,17 +133,18 @@ public class ScanBGService extends Service {
 					&& notConnected_device_list.size() > 0) {
 				if (!isScanRunning) {
 					isScanRunning = true;
-					ScanDevices scanDevices = new ScanDevices(context,
+					ScanDev2 scanDevices = new ScanDev2(context,
 							notConnected_device_list);
+					Log.e("ScanBGService","start scan line -138-");
 				} else {
-					// Log.e("ScanBGService",
+					 //Log.e("ScanBGService",
 					// "scanning is already running for pending connection");
 				}
 				// device_list.clear();
 			}
 
 		} else {
-			// Log.e("ScanBGService", "No device found in DB");
+			 Log.e("ScanBGService", "No device found in DB");
 		}
 	}
 
