@@ -9,6 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:background="#2BA0E3" >
+        
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:padding="3dp"
+            android:src="@drawable/backarrow_n" />
 
         <com.hiroapp.font.OpenSansLight
             android:id="@+id/txttitle"

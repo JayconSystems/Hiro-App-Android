@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/HeroApp_Android/!svn/ver/40/trunk/HeroApp/src/com/hiroapp/common
+END
+ScanDevices.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/common/ScanDevices.java
+END
+GPSTracker.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/HeroApp_Android/!svn/ver/19/trunk/HeroApp/src/com/hiroapp/common/GPSTracker.java
+END
+BDACommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/common/BDACommand.java
+END
+ScanInterface.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/HeroApp_Android/!svn/ver/19/trunk/HeroApp/src/com/hiroapp/common/ScanInterface.java
+END
+BluetoothDeviceActor.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/common/BluetoothDeviceActor.java
+END
+Utils.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/common/Utils.java
+END

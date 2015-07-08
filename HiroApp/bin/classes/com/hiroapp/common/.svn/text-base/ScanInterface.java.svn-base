@@ -1,0 +1,9 @@
+package com.hiroapp.common;
+
+import android.bluetooth.BluetoothDevice;
+
+public interface ScanInterface {
+
+	public void connectedDevice(BluetoothDevice device);
+	public void addDevice(BluetoothDevice scandevices, String uuid, String string);
+}

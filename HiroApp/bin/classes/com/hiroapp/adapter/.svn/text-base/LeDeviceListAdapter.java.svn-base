@@ -1,0 +1,103 @@
+package com.hiroapp.adapter;
+
+import java.util.ArrayList;
+
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.hiroapp.font.OpenSansRegular;
+import com.hiroapp.main.R;
+
+public class LeDeviceListAdapter extends BaseAdapter {
+	private ArrayList<BluetoothDevice> listData;
+
+	// private ArrayList listData;
+
+	private LayoutInflater layoutInflater;
+	private int id;
+	String dev_uuid, dev_txpower;
+
+	public LeDeviceListAdapter(Context context,
+			ArrayList<BluetoothDevice> mylistData) {
+		this.listData = mylistData;
+		layoutInflater = LayoutInflater.from(context);
+	}
+
+	public void addDeviceTolist(BluetoothDevice Device, String uuid,
+			String transmissionpower) {
+		if (!listData.contains(Device)) {
+			listData.add(Device);
+			dev_uuid = uuid;
+			dev_txpower = transmissionpower;
+		}
+	}
+
+	@Override
+	public int getCount() {
+		return listData.size();
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return listData.get(position);
+	}
+
+	@Override
+	public long getItemId(int position) {
+		// TODO Auto-generated method stub
+
+		return position;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		// TODO Auto-generated method stub
+		ViewHolder holder;
+		if (convertView == null) {
+
+			convertView = layoutInflater
+					.inflate(R.layout.listitem_device, null);
+			holder = new ViewHolder();
+			holder.deviceName = (OpenSansRegular) convertView
+					.findViewById(R.id.device_name);
+			holder.txtAddress = (OpenSansRegular) convertView
+					.findViewById(R.id.device_address);
+			holder.txtuuid = (TextView) convertView
+					.findViewById(R.id.device_uuid);
+			holder.txttxpower = (TextView) convertView
+					.findViewById(R.id.device_transmissionpower);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		BluetoothDevice devicename = (BluetoothDevice) listData.get(position);
+		String dname;
+		/*
+		 * try { if (devicename.getName().equalsIgnoreCase("null") ||
+		 * devicename.getName().equalsIgnoreCase(null)) dname =
+		 * "UNKNOWN DEVICE"; else dname = devicename.getName(); } catch
+		 * (NullPointerException ex) { dname = "UNKNOWN DEVICE"; }
+		 */
+		if(devicename.getName() != null && !devicename.getName().equalsIgnoreCase(""))
+			dname = devicename.getName();
+		else
+		dname = "UNKNOWN DEVICE";
+		
+		holder.deviceName.setText("DeviceName : " + devicename.getName());
+		holder.txtAddress.setText("Mac Address : " + devicename.getAddress());
+		return convertView;
+	}
+
+	static class ViewHolder {
+		OpenSansRegular deviceName;
+		OpenSansRegular txtAddress;
+		TextView txtuuid;
+		TextView txttxpower;
+	}
+
+}

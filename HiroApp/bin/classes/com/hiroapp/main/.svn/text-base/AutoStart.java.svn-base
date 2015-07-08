@@ -1,0 +1,39 @@
+package com.hiroapp.main;
+
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+
+import com.hiroapp.scanservice.ScanBGService;
+
+public class AutoStart extends BroadcastReceiver {
+
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		// TODO Auto-generated method stub
+		String action = intent.getAction();
+		Log.e(":::::::::::::::Inside Receiver for auto start ", ":::::::"
+				+ action);
+
+		if (intent != null
+				&& intent.getAction().equals(
+						"android.intent.action.BOOT_COMPLETED")) {
+			Log.e("Auto start service started ", "");
+			// SecuRemote s = new SecuRemote(context);
+
+			Intent startServiceIntent = new Intent(context, ScanBGService.class);
+			context.startService(startServiceIntent);
+		} else if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+
+			if (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1) == BluetoothAdapter.STATE_OFF) {
+
+			} else {
+				ScanBGService.isScanRunning = false;
+			}
+
+		}
+	}
+
+}

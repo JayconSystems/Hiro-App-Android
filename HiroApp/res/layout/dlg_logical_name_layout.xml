@@ -28,11 +28,15 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dip"
-        android:clickable="false"
+        android:focusable="true"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
         android:singleLine="true"
         android:text=""
         android:textSize="14sp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:maxLength="17"
+        android:inputType="textCapSentences"/>
 
     <Button
         android:id="@+id/dlg_logical_name_btn_OK"

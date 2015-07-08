@@ -9,19 +9,32 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnDismissListener;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hiroapp.common.BluetoothDeviceActor;
+import com.hiroapp.common.Utils;
 import com.hiroapp.dbhelper.DBHelper;
 import com.hiroapp.font.OpenSansLight;
 import com.hiroapp.main.HeroApp_App;
@@ -45,7 +58,9 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 	private DBHelper dbhelper;
 	private HeroApp_App appStorage;
-
+	private TextView deviceName;
+	private int selectedPosition = -1;
+	
 	public ConnectedDeviceListAdapter(MainActivity context,
 			ArrayList<BluetoothDeviceActor> connectedDeviceList, ListView list) {
 		this.listData = connectedDeviceList;
@@ -111,6 +126,12 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 						updateBattery(Device);
 						updateRssi(Device);
 
+						// new code 6/18
+						ImageView l=(ImageView)v2.findViewById(R.id.inflate_device_img_location);
+						l.setImageResource(R.drawable.location_i);
+						l.setEnabled(false);
+						//----
+						
 						listview.invalidate();
 
 					}
@@ -216,6 +237,16 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 				ImageView settings = (ImageView) v
 						.findViewById(R.id.inflate_device_img_settings);
+				
+				// new code 6-18
+				
+				ImageView location = (ImageView) v
+						.findViewById(R.id.inflate_device_img_location);
+				location.setImageResource(R.drawable.location_n);
+				location.setEnabled(true);
+				
+				
+				//----
 
 				settings.setImageResource(R.drawable.settings_n);
 				settings.setClickable(true);
@@ -320,7 +351,10 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 			holder.imgbattery.setImageResource(R.drawable.battery_i);
 
 			holder.imgrssi.setImageResource(R.drawable.signal_i);
-
+			// 6/18 enable location
+			holder.imglocation.setImageResource(R.drawable.location_n);
+			holder.imglocation.setEnabled(true);
+			
 			holder.imgsettings.setImageResource(R.drawable.settings_n);
 //			holder.imgsettings.setEnabled(true);
 
@@ -328,6 +362,10 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 			holder.imgsound.setImageResource(R.drawable.buzzer_n);
 //			holder.imgsound.setEnabled(true);
 			holder.imgsettings.setImageResource(R.drawable.settings_n);
+			
+			// 6/18 disable location			
+			holder.imglocation.setImageResource(R.drawable.location_i);
+			holder.imglocation.setEnabled(false);
 //			holder.imgsettings.setEnabled(true);
 		}
 
@@ -344,7 +382,23 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 			}
 
 		}
+		
+		holder.deviceName.setOnClickListener(new OnClickListener(){
+			
+			@Override
+			public void onClick(View v) {
+				
+				if (listData.get(position).isConnected()) {
+				
+				// TODO Auto-generated method stubE
+				
+				changeLogicalName(listData.get(position).getDeviceMacAddress().toString());
+				}
+			}
 
+		});
+		
+		
 		holder.imgsound.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -354,9 +408,6 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 					if (!listData.get(position).isBeepRinging) {
 
-						// View v1 = listview.getChildAt(position);
-						// holder.imgsound = (ImageView) v1
-						// .findViewById(R.id.inflate_device_img_sound);
 						holder.imgsound.setImageResource(R.drawable.buzzer_a2);
 
 						if (getBeepVolume(listData.get(position)
@@ -371,28 +422,8 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 											1, "");
 						}
 						listData.get(position).isBeepRinging = true;
-						// beepRunningList.add(bda);
-						// startbeepTimer = new Timer();
-						// beepfinishedTask = new BeepFinishedTask();
-						// if (getBeepVolume(bda.getDeviceMacAddress()))
-						// startbeepTimer.schedule(beepfinishedTask, 10000,
-						// 50000);
-						// else
-						// startbeepTimer.schedule(beepfinishedTask, 7000,
-						// 50000);
 					} else {
-						// if (startbeepTimer != null && beepfinishedTask !=
-						// null) {
-						// beepfinishedTask.cancel();
-						// startbeepTimer.cancel();
-						// }
-
-						// if (beepRunningList != null
-						// && beepRunningList.size() > 0) {
-						// int index = beepRunningList.indexOf(bda);
-						// beepRunningList.remove(index);
-						// }
-
+						
 						listData.get(position).isBeepRinging = false;
 						holder.imgsound.setImageResource(R.drawable.buzzer_n);
 						listData.get(position).deviceIsReadyForCommunication(
@@ -431,6 +462,73 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 		return convertView;
 	}
+	
+	/**
+	 * Changes Hiro's name
+	 */
+	protected void changeLogicalName(final String mac) {
+
+		// TODO Auto-generated method stub
+		
+		final Dialog dlg = new Dialog(MainActivity.instance);
+		dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+		dlg.setContentView(R.layout.dlg_logical_name_layout);
+		dlg.setTitle(MainActivity.instance.getResources().getString(R.string.app_name));
+		dlg.setCancelable(true);
+		
+		Button b1 = (Button) dlg.findViewById(R.id.dlg_logical_name_btn_OK);
+		
+		deviceName = (TextView) MainActivity.instance.findViewById(R.id.inflate_device_txt_Name);
+		
+
+		dlg.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				deviceName.clearFocus();
+				Utils.hidekeyboard(MainActivity.instance);
+			}
+		});		
+		
+		b1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dlg.dismiss();
+				EditText et = (EditText) dlg
+						.findViewById(R.id.dlg_logical_name_edt_lname);
+				if (!et.getText().toString().equals("")) {
+					
+					dbhelper.updateLogicalName(mac, et.getText().toString());
+					MainActivity.instance.initScreen();
+					// Utils.hidekeyboard(instance);
+				
+				} else {
+					dlg.dismiss();
+					Toast.makeText(MainActivity.instance,
+							"Field should not be blank.", Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+		});
+		
+		deviceName = (TextView) MainActivity.instance.findViewById(R.id.inflate_device_txt_Name);
+		
+		deviceName.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+					
+				if (!hasFocus)
+				{
+					dlg.dismiss();
+				}
+			}
+		});
+
+		dlg.show();
+	
+		
+	}
 
 	static class ViewHolder {
 		OpenSansLight deviceName;
@@ -441,7 +539,76 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 		ImageView imgmain;
 		ImageView imgbattery;
 	}
+	
+	
+	/**
+	 * Changes Hiro's name
+	 */
+	
+	/*
+	private void changeLogicalName() {
+		
+		
+		final Dialog dlg = new Dialog(MainActivity.instance);	
+	
+		dlg.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+		
+		dlg.setContentView(R.layout.dlg_logical_name_layout);
+		
+		dlg.setTitle(MainActivity.instance.getResources().getString(R.string.app_name));
+		
+		dlg.setCancelable(true);
+		
+		Button b1 = (Button) dlg.findViewById(R.id.dlg_logical_name_btn_OK);
+		
+		EditText et = (EditText) dlg
+				.findViewById(R.id.dlg_logical_name_edt_lname); 
 
+		dlg.setOnDismissListener(new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				// TODO Auto-generated method stub
+				deviceName.clearFocus();
+				Utils.hidekeyboard(MainActivity.instance);
+			}
+		});		
+		
+		b1.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dlg.dismiss();
+				EditText et = (EditText) dlg
+						.findViewById(R.id.dlg_logical_name_edt_lname);
+				if (!et.getText().toString().equals("")) {
+					dbhelper.updateLogicalName( et.getText().toString());
+					deviceName.setText(et.getText().toString());
+					 Utils.hidekeyboard(MainActivity.instance);
+				
+				} else {
+					dlg.dismiss();
+					Toast.makeText(MainActivity.instance,
+							"Field should not be blank.", Toast.LENGTH_SHORT)
+							.show();
+				}
+			}
+		});
+		
+		deviceName.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// TODO Auto-generated method stub
+					
+				if (!hasFocus)
+				{
+					dlg.dismiss();
+				}
+			}
+		});
+
+		dlg.show();
+		
+	}
+*/
 	public boolean getBeepVolume(String mac) {
 
 		boolean isbeepVolume = true;
@@ -454,41 +621,4 @@ public class ConnectedDeviceListAdapter extends BaseAdapter {
 
 		return isbeepVolume;
 	}
-
-	// class BeepFinishedTask extends TimerTask {
-	// @Override
-	// public void run() {
-	//
-	// BluetoothDeviceActor bda = null;
-	// if (beepRunningList != null && beepRunningList.size() > 0)
-	// bda = beepRunningList.get(0);
-	//
-	// if (bda != null) {
-	// if (listData.contains(bda)) {
-	// int index = listData.indexOf(bda);
-	// View v = listview.getChildAt(index
-	// - listview.getFirstVisiblePosition());
-	//
-	// holder.imgsound = (ImageView) v
-	// .findViewById(R.id.inflate_device_img_sound);
-	// mcontext.runOnUiThread(new Runnable() {
-	//
-	// @Override
-	// public void run() {
-	// holder.imgsound.setImageResource(R.drawable.buzzer_n);
-	// }
-	// });
-	//
-	// }
-	// if (startbeepTimer != null && beepfinishedTask != null) {
-	// beepfinishedTask.cancel();
-	// startbeepTimer.cancel();
-	// }
-	// bda.isBeepRinging = false;
-	// int index = beepRunningList.indexOf(bda);
-	// beepRunningList.remove(index);
-	// }
-	// }
-	// }
-
 }

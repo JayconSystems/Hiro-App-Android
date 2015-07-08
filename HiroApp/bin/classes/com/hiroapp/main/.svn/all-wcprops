@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/HeroApp_Android/!svn/ver/40/trunk/HeroApp/src/com/hiroapp/main
+END
+InfoActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/HeroApp_Android/!svn/ver/19/trunk/HeroApp/src/com/hiroapp/main/InfoActivity.java
+END
+ScanActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/main/ScanActivity.java
+END
+MapActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/main/MapActivity.java
+END
+HeroApp_App.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/HeroApp_Android/!svn/ver/19/trunk/HeroApp/src/com/hiroapp/main/HeroApp_App.java
+END
+MainActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/main/MainActivity.java
+END
+AutoStart.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/HeroApp_Android/!svn/ver/19/trunk/HeroApp/src/com/hiroapp/main/AutoStart.java
+END
+SplashScreen.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/main/SplashScreen.java
+END
+SettingsActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/HeroApp_Android/!svn/ver/44/trunk/HeroApp/src/com/hiroapp/main/SettingsActivity.java
+END
